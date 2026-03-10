@@ -1,9 +1,563 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<title>My Website</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeClaire Visions</title>
+  <meta name="description" content="LeClaire Visions — strategic consulting, financial analysis, and cross-border advisory." />
+  <style>
+    :root {
+      --bg: #0b1020;
+      --bg-soft: rgba(255,255,255,0.06);
+      --card: rgba(255,255,255,0.08);
+      --text: #eef2ff;
+      --muted: #b7c0d8;
+      --line: rgba(255,255,255,0.12);
+      --accent: #5eead4;
+      --accent-2: #60a5fa;
+      --shadow: 0 20px 60px rgba(0,0,0,0.35);
+      --radius: 22px;
+      --max: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(96,165,250,0.18), transparent 32%),
+        radial-gradient(circle at 85% 15%, rgba(94,234,212,0.14), transparent 24%),
+        linear-gradient(180deg, #0a0f1e 0%, #111a31 52%, #0b1020 100%);
+      line-height: 1.6;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    .container {
+      width: min(calc(100% - 32px), var(--max));
+      margin: 0 auto;
+    }
+
+    .nav-wrap {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(18px);
+      background: rgba(11,16,32,0.6);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 74px;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 10px 30px rgba(96,165,250,0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .brand-mark::after {
+      content: "";
+      position: absolute;
+      inset: 1px;
+      border-radius: 11px;
+      background: linear-gradient(160deg, rgba(255,255,255,0.35), rgba(255,255,255,0.04));
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 13px 18px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      font-weight: 600;
+      transition: 0.2s ease;
+    }
+
+    .btn-primary {
+      color: #08111e;
+      background: linear-gradient(135deg, var(--accent), #8bfff0);
+      box-shadow: 0 12px 30px rgba(94,234,212,0.22);
+    }
+
+    .btn-primary:hover { transform: translateY(-1px); }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.04);
+      border-color: rgba(255,255,255,0.14);
+      color: var(--text);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.24);
+    }
+
+    .hero {
+      padding: 82px 0 46px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.9fr;
+      gap: 28px;
+      align-items: stretch;
+    }
+
+    .hero-copy,
+    .hero-card,
+    .card,
+    .contact-card,
+    .footer-card {
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+    }
+
+    .hero-copy {
+      padding: 44px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(94,234,212,0.24);
+      background: rgba(94,234,212,0.08);
+      color: #d8fffa;
+      font-size: 0.86rem;
+      margin-bottom: 18px;
+    }
+
+    h1, h2, h3 { margin: 0; line-height: 1.08; }
+
+    h1 {
+      font-size: clamp(2.6rem, 6vw, 4.8rem);
+      letter-spacing: -0.04em;
+      max-width: 12ch;
+    }
+
+    .hero-copy p {
+      color: var(--muted);
+      font-size: 1.05rem;
+      max-width: 60ch;
+      margin: 18px 0 0;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 30px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 34px;
+    }
+
+    .stat {
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.4rem;
+      margin-bottom: 6px;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .hero-card {
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      right: -60px;
+      top: -60px;
+      background: radial-gradient(circle, rgba(94,234,212,0.24), transparent 68%);
+    }
+
+    .mini-label {
+      color: #d9e4ff;
+      font-weight: 700;
+      font-size: 0.94rem;
+      margin-bottom: 16px;
+    }
+
+    .service-stack {
+      display: grid;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .service-item {
+      padding: 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(9,14,28,0.5);
+    }
+
+    .service-item h3 {
+      font-size: 1rem;
+      margin-bottom: 6px;
+    }
+
+    .service-item p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    section {
+      padding: 26px 0;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 20px;
+      margin-bottom: 18px;
+    }
+
+    .section-head p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 58ch;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .card {
+      padding: 24px;
+    }
+
+    .icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 18px;
+      background: linear-gradient(135deg, rgba(94,234,212,0.18), rgba(96,165,250,0.18));
+      border: 1px solid rgba(255,255,255,0.12);
+      font-size: 1.15rem;
+    }
+
+    .card p {
+      color: var(--muted);
+      margin: 10px 0 0;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .contact-card {
+      padding: 30px;
+    }
+
+    .contact-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .contact-item {
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--muted);
+    }
+
+    .contact-item strong {
+      color: var(--text);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .footer {
+      padding: 34px 0 60px;
+    }
+
+    .footer-card {
+      padding: 22px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      color: var(--muted);
+    }
+
+    .muted { color: var(--muted); }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .cards,
+      .split {
+        grid-template-columns: 1fr;
+      }
+
+      .nav {
+        flex-wrap: wrap;
+        padding: 12px 0;
+      }
+
+      .nav-links {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .hero-copy,
+      .hero-card,
+      .card,
+      .contact-card,
+      .footer-card {
+        padding: 20px;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .section-head {
+        align-items: start;
+        flex-direction: column;
+      }
+
+      .hero {
+        padding-top: 42px;
+      }
+    }
+  </style>
 </head>
 <body>
-<h1>Hello from Kyle's Website</h1>
-<p>This site is hosted for free.</p>
+  <div class="nav-wrap">
+    <div class="container nav">
+      <a href="#top" class="brand">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>LeClaire Visions</span>
+      </a>
+      <div class="nav-links">
+        <a href="#services">Services</a>
+        <a href="#approach">Approach</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </div>
+  </div>
+
+  <main id="top">
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <div class="eyebrow">Strategic finance, tax, and advisory support</div>
+          <h1>Clear thinking for complex business decisions.</h1>
+          <p>
+            LeClaire Visions helps businesses navigate cross-border issues, financial analysis,
+            planning, and decision support with practical, high-quality insight.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#contact">Get in touch</a>
+            <a class="btn btn-secondary" href="#services">Explore services</a>
+          </div>
+          <div class="stats">
+            <div class="stat">
+              <strong>Cross-border</strong>
+              <span>Advisory for international business questions</span>
+            </div>
+            <div class="stat">
+              <strong>Analytical</strong>
+              <span>Structured thinking grounded in detail</span>
+            </div>
+            <div class="stat">
+              <strong>Practical</strong>
+              <span>Focused on usable outputs and decisions</span>
+            </div>
+          </div>
+        </div>
+
+        <aside class="hero-card">
+          <div class="mini-label">What we do</div>
+          <div class="service-stack">
+            <div class="service-item">
+              <h3>Strategic Advisory</h3>
+              <p>Support for high-stakes business, tax, and operational decisions.</p>
+            </div>
+            <div class="service-item">
+              <h3>Financial Analysis</h3>
+              <p>Clear, decision-ready analysis for transactions, planning, and performance.</p>
+            </div>
+            <div class="service-item">
+              <h3>International Structuring</h3>
+              <p>Thoughtful perspective on cross-border business models and complexity.</p>
+            </div>
+            <div class="service-item">
+              <h3>Project-Based Support</h3>
+              <p>Flexible help for models, memos, presentations, and special initiatives.</p>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="services">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Services</div>
+            <h2>Built for clarity, rigor, and momentum.</h2>
+          </div>
+          <p>
+            Use this section to describe the specific services you want to highlight.
+            The wording below is a polished placeholder that you can easily customize.
+          </p>
+        </div>
+
+        <div class="cards">
+          <article class="card">
+            <div class="icon">01</div>
+            <h3>Advisory Projects</h3>
+            <p>Targeted support for business planning, structuring, and strategic decision-making.</p>
+          </article>
+          <article class="card">
+            <div class="icon">02</div>
+            <h3>Financial Models</h3>
+            <p>Decision-oriented models and analysis designed to make complex issues easier to understand.</p>
+          </article>
+          <article class="card">
+            <div class="icon">03</div>
+            <h3>Technical Memos</h3>
+            <p>Clear written work product for internal stakeholders, management, or external discussions.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="approach">
+      <div class="container split">
+        <div class="card">
+          <div class="eyebrow">Approach</div>
+          <h2>Modern, thoughtful, and outcome-focused.</h2>
+          <p>
+            The strongest advisory work balances technical depth with communication that decision-makers can actually use.
+            LeClaire Visions is built around that principle: understand the issue, structure the analysis, and deliver something practical.
+          </p>
+        </div>
+        <div class="card">
+          <div class="eyebrow">Why clients value it</div>
+          <h2>Structured thinking without unnecessary noise.</h2>
+          <p>
+            Whether the work involves cross-border complexity, financial questions, or strategic planning,
+            the goal is the same: create clarity, reduce friction, and support better decisions.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="container">
+        <div class="contact-card">
+          <div class="section-head">
+            <div>
+              <div class="eyebrow">Contact</div>
+              <h2>Let’s start a conversation.</h2>
+            </div>
+            <p>
+              Replace the placeholders below with your preferred contact details.
+              If you do not want to publish an email address yet, you can keep just a LinkedIn link.
+            </p>
+          </div>
+
+          <div class="contact-list">
+            <div class="contact-item">
+              <strong>Email</strong>
+              hello@leclairevisions.com
+            </div>
+            <div class="contact-item">
+              <strong>LinkedIn</strong>
+              linkedin.com/in/your-profile
+            </div>
+            <div class="contact-item">
+              <strong>Location</strong>
+              Prague, Czech Republic
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-card">
+        <div>
+          <strong>LeClaire Visions</strong><br />
+          <span class="muted">Strategic advisory and analytical support.</span>
+        </div>
+        <div class="muted">© 2026 LeClaire Visions. All rights reserved.</div>
+      </div>
+    </div>
+  </footer>
 </body>
 </html>
+
