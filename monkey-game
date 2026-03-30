@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Monkey Banana Math Game</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(180deg, #b8ecff 0%, #d8f7c8 55%, #8bd17c 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      color: #2f2a1f;
+    }
+
+    .game {
+      width: 100%;
+      max-width: 980px;
+      background: rgba(255,255,255,0.9);
+      border-radius: 24px;
+      box-shadow: 0 18px 50px rgba(0,0,0,0.16);
+      padding: 24px;
+      border: 4px solid #fff5d7;
+    }
+
+    .title {
+      text-align: center;
+      margin: 0 0 10px;
+      font-size: clamp(28px, 4vw, 44px);
+    }
+
+    .subtitle {
+      text-align: center;
+      margin: 0 0 22px;
+      font-size: 18px;
+    }
+
+    .top-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .stat {
+      background: #fff8df;
+      border: 3px solid #f4d36a;
+      border-radius: 18px;
+      padding: 12px;
+      text-align: center;
+      font-weight: 700;
+    }
+
+    .scene {
+      position: relative;
+      height: 360px;
+      background: linear-gradient(180deg, #9fe7ff 0%, #d1f6b9 60%, #8ed77c 100%);
+      border-radius: 24px;
+      overflow: hidden;
+      border: 4px solid #7cc46e;
+      margin-bottom: 22px;
+    }
+
+    .tree {
+      position: absolute;
+      right: 80px;
+      bottom: 50px;
+      width: 120px;
+      height: 210px;
+    }
+
+    .trunk {
+      position: absolute;
+      bottom: 0;
+      left: 42px;
+      width: 36px;
+      height: 130px;
+      background: #8b5a2b;
+      border-radius: 12px;
+    }
+
+    .leaves {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 120px;
+      height: 110px;
+      background: #3dac4f;
+      border-radius: 50%;
+      box-shadow: -24px 20px 0 #44bb58, 24px 20px 0 #44bb58;
+    }
+
+    .banana {
+      position: absolute;
+      top: 75px;
+      left: 20px;
+      font-size: 52px;
+      transform: rotate(-10deg);
+      filter: drop-shadow(0 6px 4px rgba(0,0,0,0.15));
+    }
+
+    .ground {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 58px;
+      background: #5fb34f;
+    }
+
+    .monkey-wrap {
+      position: absolute;
+      left: 90px;
+      bottom: 58px;
+      transition: transform 0.35s ease;
+      transform-origin: bottom center;
+    }
+
+    .monkey {
+      position: relative;
+      width: 150px;
+      height: 150px;
+    }
+
+    .body {
+      position: absolute;
+      width: 84px;
+      height: 92px;
+      background: #9b6037;
+      border-radius: 45px;
+      left: 33px;
+      top: 48px;
+    }
+
+    .belly {
+      position: absolute;
+      width: 48px;
+      height: 54px;
+      background: #f0c59b;
+      border-radius: 50%;
+      left: 51px;
+      top: 70px;
+    }
+
+    .head {
+      position: absolute;
+      width: 88px;
+      height: 82px;
+      background: #9b6037;
+      border-radius: 50%;
+      left: 31px;
+      top: 0;
+    }
+
+    .face {
+      position: absolute;
+      width: 62px;
+      height: 48px;
+      background: #f0c59b;
+      border-radius: 50%;
+      left: 44px;
+      top: 24px;
+    }
+
+    .ear {
+      position: absolute;
+      width: 28px;
+      height: 28px;
+      background: #9b6037;
+      border-radius: 50%;
+      top: 20px;
+    }
+
+    .ear.left { left: 18px; }
+    .ear.right { right: 18px; }
+
+    .eye {
+      position: absolute;
+      width: 7px;
+      height: 7px;
+      background: #1d1d1d;
+      border-radius: 50%;
+      top: 43px;
+    }
+
+    .eye.left { left: 58px; }
+    .eye.right { left: 84px; }
+
+    .smile {
+      position: absolute;
+      width: 20px;
+      height: 10px;
+      border-bottom: 3px solid #6b3d1f;
+      border-radius: 0 0 20px 20px;
+      top: 56px;
+      left: 65px;
+    }
+
+    .arm {
+      position: absolute;
+      width: 16px;
+      height: 64px;
+      background: #9b6037;
+      border-radius: 12px;
+      top: 62px;
+    }
+
+    .arm.left {
+      left: 22px;
+      transform: rotate(25deg);
+      transform-origin: top center;
+    }
+
+    .arm.right {
+      right: 22px;
+      transform: rotate(-25deg);
+      transform-origin: top center;
+    }
+
+    .leg {
+      position: absolute;
+      width: 16px;
+      height: 58px;
+      background: #9b6037;
+      border-radius: 12px;
+      top: 118px;
+    }
+
+    .leg.left { left: 48px; transform: rotate(8deg); }
+    .leg.right { left: 85px; transform: rotate(-8deg); }
+
+    .tail {
+      position: absolute;
+      width: 70px;
+      height: 70px;
+      border: 12px solid #9b6037;
+      border-left-color: transparent;
+      border-top-color: transparent;
+      border-radius: 50%;
+      left: -18px;
+      top: 70px;
+      transform: rotate(10deg);
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1.3fr 0.7fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .question-box, .message-box {
+      background: #fff8df;
+      border: 3px solid #f1cf63;
+      border-radius: 22px;
+      padding: 18px;
+    }
+
+    .question {
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 800;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .answer-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    input[type="number"] {
+      font-size: 24px;
+      padding: 12px 14px;
+      width: 180px;
+      border-radius: 14px;
+      border: 3px solid #d8b85c;
+      text-align: center;
+    }
+
+    button {
+      font-size: 20px;
+      font-weight: 700;
+      border: none;
+      border-radius: 14px;
+      padding: 12px 18px;
+      cursor: pointer;
+    }
+
+    .primary { background: #ffb938; }
+    .secondary { background: #8ed77c; }
+    .primary:hover, .secondary:hover { filter: brightness(0.98); }
+
+    .message {
+      min-height: 96px;
+      font-size: 22px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .footer-note {
+      text-align: center;
+      margin-top: 16px;
+      font-size: 15px;
+    }
+
+    .win {
+      color: #1d7a2f;
+    }
+
+    .lose {
+      color: #9d1e1e;
+    }
+
+    @media (max-width: 760px) {
+      .top-bar, .controls {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .controls {
+        grid-template-columns: 1fr;
+      }
+
+      .scene {
+        height: 300px;
+      }
+
+      .tree {
+        right: 24px;
+        transform: scale(0.88);
+        transform-origin: bottom right;
+      }
+
+      .monkey-wrap {
+        left: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="game">
+    <h1 class="title">🐵 Monkey Banana Math Game 🍌</h1>
+    <p class="subtitle">Answer the math questions to help the monkey reach the banana!</p>
+
+    <div class="top-bar">
+      <div class="stat">Net Success: <span id="netSuccess">0</span> / 10</div>
+      <div class="stat">Net Incorrect: <span id="netIncorrect">0</span> / 5</div>
+      <div class="stat">Correct: <span id="correctCount">0</span></div>
+      <div class="stat">Wrong: <span id="wrongCount">0</span></div>
+    </div>
+
+    <div class="scene">
+      <div class="monkey-wrap" id="monkeyWrap">
+        <div class="monkey">
+          <div class="tail"></div>
+          <div class="arm left"></div>
+          <div class="arm right"></div>
+          <div class="leg left"></div>
+          <div class="leg right"></div>
+          <div class="body"></div>
+          <div class="belly"></div>
+          <div class="head"></div>
+          <div class="ear left"></div>
+          <div class="ear right"></div>
+          <div class="face"></div>
+          <div class="eye left"></div>
+          <div class="eye right"></div>
+          <div class="smile"></div>
+        </div>
+      </div>
+
+      <div class="tree">
+        <div class="leaves"></div>
+        <div class="banana">🍌</div>
+        <div class="trunk"></div>
+      </div>
+
+      <div class="ground"></div>
+    </div>
+
+    <div class="controls">
+      <div class="question-box">
+        <div class="question" id="questionText">2 + 3 = ?</div>
+        <div class="answer-row">
+          <input id="answerInput" type="number" inputmode="numeric" placeholder="Your answer" />
+          <button class="primary" id="submitBtn">Check</button>
+          <button class="secondary" id="restartBtn">Restart</button>
+        </div>
+      </div>
+
+      <div class="message-box">
+        <div class="message" id="messageText">Let's help the monkey!</div>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      The monkey gets bigger for correct answers and smaller for incorrect ones.
+    </div>
+  </div>
+
+  <script>
+    const questionText = document.getElementById('questionText');
+    const answerInput = document.getElementById('answerInput');
+    const submitBtn = document.getElementById('submitBtn');
+    const restartBtn = document.getElementById('restartBtn');
+    const messageText = document.getElementById('messageText');
+    const netSuccessEl = document.getElementById('netSuccess');
+    const netIncorrectEl = document.getElementById('netIncorrect');
+    const correctCountEl = document.getElementById('correctCount');
+    const wrongCountEl = document.getElementById('wrongCount');
+    const monkeyWrap = document.getElementById('monkeyWrap');
+
+    let currentAnswer = 0;
+    let correctCount = 0;
+    let wrongCount = 0;
+    let netScore = 0;
+    let gameOver = false;
+
+    function randomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function generateQuestion() {
+      const useAddition = Math.random() < 0.6;
+      let a, b, symbol;
+
+      if (useAddition) {
+        a = randomInt(0, 10);
+        b = randomInt(0, 10);
+        currentAnswer = a + b;
+        symbol = '+';
+      } else {
+        a = randomInt(0, 10);
+        b = randomInt(0, a);
+        currentAnswer = a - b;
+        symbol = '-';
+      }
+
+      questionText.textContent = `${a} ${symbol} ${b} = ?`;
+      answerInput.value = '';
+      answerInput.focus();
+    }
+
+    function updateMonkey() {
+      const scale = Math.max(0.55, 1 + netScore * 0.06);
+      const moveX = Math.max(0, netScore * 18);
+      monkeyWrap.style.transform = `translateX(${moveX}px) scale(${scale})`;
+    }
+
+    function updateStats() {
+      netSuccessEl.textContent = Math.max(0, netScore);
+      netIncorrectEl.textContent = Math.max(0, -netScore);
+      correctCountEl.textContent = correctCount;
+      wrongCountEl.textContent = wrongCount;
+      updateMonkey();
+    }
+
+    function setMessage(text, type = '') {
+      messageText.textContent = text;
+      messageText.className = 'message';
+      if (type) messageText.classList.add(type);
+    }
+
+    function checkWinLose() {
+      if (netScore >= 10) {
+        gameOver = true;
+        setMessage('🎉 You win! The monkey got the banana! 🍌', 'win');
+        questionText.textContent = 'You did it!';
+        return true;
+      }
+
+      if (netScore <= -5) {
+        gameOver = true;
+        setMessage('🙈 Oh no! The monkey got too tiny. Try again!', 'lose');
+        questionText.textContent = 'Game Over';
+        return true;
+      }
+
+      return false;
+    }
+
+    function submitAnswer() {
+      if (gameOver) return;
+
+      const userAnswer = Number(answerInput.value);
+      if (answerInput.value.trim() === '') {
+        setMessage('Type an answer first!');
+        return;
+      }
+
+      if (userAnswer === currentAnswer) {
+        correctCount += 1;
+        netScore += 1;
+        setMessage('✅ Correct! The monkey grew bigger!');
+      } else {
+        wrongCount += 1;
+        netScore -= 1;
+        setMessage(`❌ Not quite. The right answer was ${currentAnswer}.`);
+      }
+
+      updateStats();
+      if (!checkWinLose()) {
+        generateQuestion();
+      }
+    }
+
+    function restartGame() {
+      correctCount = 0;
+      wrongCount = 0;
+      netScore = 0;
+      gameOver = false;
+      setMessage("Let's help the monkey!");
+      updateStats();
+      generateQuestion();
+    }
+
+    submitBtn.addEventListener('click', submitAnswer);
+    restartBtn.addEventListener('click', restartGame);
+    answerInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') submitAnswer();
+    });
+
+    restartGame();
+  </script>
+</body>
+</html>
