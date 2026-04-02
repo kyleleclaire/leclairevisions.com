@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ATO PCBC XML Builder | LeClaire Visions</title>
+  <meta name="description" content="LeClaire Visions ATO Public Country-by-Country XML Builder" />
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --panel: #ffffff;
+      --panel-2: #f8fafc;
+      --text: #122033;
+      --muted: #5e6b7a;
+      --line: #d9e2ec;
+      --line-strong: #c2cfdb;
+      --brand: #164e63;
+      --brand-2: #0f766e;
+      --accent: #e6fffb;
+      --warning-bg: #fff8e6;
+      --warning-line: #f3d37a;
+      --danger: #b42318;
+      --shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
+      --radius: 20px;
+      --radius-sm: 12px;
+      --font: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: var(--font); }
+    body { min-height: 100vh; }
+    a { color: var(--brand); }
+    button, input, select, textarea { font: inherit; }
+
+    .page {
+      max-width: 1460px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #ffffff 0%, #f8fcff 55%, #eef8f7 100%);
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      padding: 28px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .brand-kicker {
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--brand-2);
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-size: clamp(28px, 4vw, 42px);
+      line-height: 1.05;
+      margin: 0 0 10px;
+      letter-spacing: -0.03em;
+    }
+
+    .subtitle {
+      max-width: 760px;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 15px;
+      margin: 0;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .btn {
+      border: 1px solid transparent;
+      border-radius: 14px;
+      padding: 12px 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 160ms ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
+    .btn-primary { background: linear-gradient(135deg, var(--brand), var(--brand-2)); color: #fff; box-shadow: 0 8px 18px rgba(22, 78, 99, 0.2); }
+    .btn-secondary { background: #fff; border-color: var(--line-strong); color: var(--text); }
+    .btn-danger { background: #fff; border-color: #efc3c0; color: var(--danger); }
+    .btn-small { padding: 8px 12px; border-radius: 10px; font-size: 13px; }
+
+    .alert {
+      margin-top: 18px;
+      background: var(--warning-bg);
+      border: 1px solid var(--warning-line);
+      border-radius: 18px;
+      padding: 14px 16px;
+      display: none;
+    }
+
+    .alert.show { display: block; }
+    .alert-title { font-weight: 700; margin-bottom: 6px; }
+    .alert ul { margin: 0; padding-left: 18px; }
+    .alert li { margin: 4px 0; }
+
+    .tabs {
+      margin-top: 22px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .tab-btn {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-weight: 700;
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(180deg, #fff, #f2fbfa);
+      color: var(--brand);
+      border-color: #b6d8d4;
+      box-shadow: 0 8px 20px rgba(15, 118, 110, 0.08);
+    }
+
+    .tab-panel { display: none; margin-top: 18px; }
+    .tab-panel.active { display: block; }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 18px;
+    }
+
+    .stack { display: grid; gap: 18px; }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .card-head {
+      padding: 20px 22px 10px;
+    }
+
+    .card-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin: 0 0 4px;
+      letter-spacing: -0.02em;
+    }
+
+    .card-desc {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .card-body {
+      padding: 10px 22px 22px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .form-grid-1 { display: grid; gap: 14px; }
+    .field { display: grid; gap: 7px; }
+    .field.full { grid-column: 1 / -1; }
+
+    label {
+      font-size: 13px;
+      font-weight: 700;
+      color: #274055;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    input[type="email"],
+    input[type="tel"],
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid var(--line-strong);
+      background: #fff;
+      color: var(--text);
+      padding: 11px 12px;
+      border-radius: 14px;
+      outline: none;
+      transition: 150ms ease;
+    }
+
+    textarea { resize: vertical; min-height: 90px; }
+    input:focus, select:focus, textarea:focus { border-color: var(--brand); box-shadow: 0 0 0 4px rgba(22, 78, 99, 0.08); }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid var(--line);
+      background: var(--panel-2);
+      border-radius: 16px;
+      padding: 12px 14px;
+    }
+
+    .toggle-row input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--brand-2); }
+
+    .mini-note {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .group-members {
+      display: grid;
+      gap: 10px;
+    }
+
+    .member-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .table-wrap {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      overflow: auto;
+      background: #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 2350px;
+      font-size: 13px;
+    }
+
+    th, td {
+      border: 1px solid #e5edf5;
+      padding: 8px;
+      vertical-align: top;
+    }
+
+    th {
+      position: sticky;
+      top: 0;
+      background: #edf5fb;
+      z-index: 1;
+      text-align: left;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: #3d556d;
+    }
+
+    tbody tr:nth-child(even) { background: #fbfdff; }
+    .cell-center { text-align: center; }
+    .cell-center input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--brand-2); }
+    .row-actions { display: flex; justify-content: center; }
+
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+
+    .code-box {
+      background: #08111d;
+      color: #e8f1fb;
+      border-radius: 20px;
+      padding: 18px;
+      overflow: auto;
+      max-height: 72vh;
+      border: 1px solid #0f2238;
+      white-space: pre;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .footer-note {
+      margin-top: 16px;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .hidden { display: none !important; }
+
+    @media (max-width: 1100px) {
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 760px) {
+      .page { padding: 14px; }
+      .hero { padding: 20px; border-radius: 22px; }
+      .tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .form-grid { grid-template-columns: 1fr; }
+      .card-head, .card-body { padding-left: 16px; padding-right: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="hero">
+      <div>
+        <div class="brand-kicker">LeClaire Visions • Tax Technology Tool</div>
+        <h1>ATO PCBC XML Builder</h1>
+        <p class="subtitle">
+          Enter Public Country-by-Country reporting data in a table-like interface, preview the resulting XML, and export a schema-ready file for your GitHub Pages deployment at leclairevisions.com.
+        </p>
+      </div>
+      <div class="hero-actions">
+        <button class="btn btn-secondary" id="saveJsonBtn">Save JSON</button>
+        <label class="btn btn-secondary" for="loadJsonInput">Load JSON</label>
+        <input id="loadJsonInput" class="hidden" type="file" accept="application/json" />
+        <button class="btn btn-primary" id="exportXmlBtn">Export XML</button>
+      </div>
+    </section>
+
+    <section class="alert" id="validationAlert">
+      <div class="alert-title">Validation notes</div>
+      <ul id="validationList"></ul>
+    </section>
+
+    <nav class="tabs" aria-label="Sections">
+      <button class="tab-btn active" data-tab="header">Header</button>
+      <button class="tab-btn" data-tab="entity">Entity</button>
+      <button class="tab-btn" data-tab="jurisdictions">Jurisdictions</button>
+      <button class="tab-btn" data-tab="xml">XML Preview</button>
+    </nav>
+
+    <section class="tab-panel active" id="tab-header">
+      <div class="card">
+        <div class="card-head">
+          <h2 class="card-title">Declaration and reporting period</h2>
+          <p class="card-desc">Core values that populate the top portion of the XML file.</p>
+        </div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="field full">
+              <label for="declarationText">Declaration statement</label>
+              <textarea id="declarationText"></textarea>
+            </div>
+            <div class="field"><label for="signatureDate">Signature date</label><input id="signatureDate" type="date" /></div>
+            <div class="field"><label for="signatoryIdentifier">Signatory identifier</label><input id="signatoryIdentifier" type="text" placeholder="Full name, email, or unique ID" /></div>
+            <div class="field"><label for="financialYear">Financial year</label><input id="financialYear" type="number" placeholder="2025" /></div>
+            <div class="field"><label for="startDate">Reporting period start</label><input id="startDate" type="date" /></div>
+            <div class="field"><label for="endDate">Reporting period end</label><input id="endDate" type="date" /></div>
+            <div class="field"><label for="jsonFileName">Default JSON filename</label><input id="jsonFileName" type="text" value="pcbcrequest-workpaper.json" /></div>
+            <div class="field"></div>
+          </div>
+          <div class="form-grid" style="margin-top:14px;">
+            <div class="toggle-row"><input id="amendment" type="checkbox" /><label for="amendment">Amendment</label></div>
+            <div class="toggle-row"><input id="statementAccepted" type="checkbox" checked /><label for="statementAccepted">Declaration accepted</label></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab-panel" id="tab-entity">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-head">
+            <h2 class="card-title">Global parent details</h2>
+            <p class="card-desc">Entity identity, address details, and general publishing exemption flag.</p>
+          </div>
+          <div class="card-body">
+            <div class="form-grid">
+              <div class="field"><label for="residencyCountry">Residency country for tax purposes</label><select id="residencyCountry"></select></div>
+              <div class="field"><label for="addressCountry">Address country</label><select id="addressCountry"></select></div>
+              <div class="field"><label for="atoReferenceNumber">ATO reference number</label><input id="atoReferenceNumber" type="text" /></div>
+              <div class="field"><label for="abn">ABN</label><input id="abn" type="text" /></div>
+              <div class="field"><label for="entityName">Entity name</label><input id="entityName" type="text" /></div>
+              <div class="field"><label for="email">Email</label><input id="email" type="email" /></div>
+              <div class="field"><label for="phone">Phone</label><input id="phone" type="tel" /></div>
+              <div class="field"><label for="address1">Address line 1</label><input id="address1" type="text" /></div>
+              <div class="field"><label for="address2">Address line 2</label><input id="address2" type="text" /></div>
+              <div class="field"><label for="locality">Locality</label><input id="locality" type="text" /></div>
+              <div class="field"><label for="stateOrTerritory">State / territory</label><input id="stateOrTerritory" type="text" /></div>
+              <div class="field"><label for="postcode">Postcode</label><input id="postcode" type="text" /></div>
+            </div>
+            <div class="toggle-row" style="margin-top:14px;"><input id="generalPublishingExemption" type="checkbox" /><label for="generalPublishingExemption">Full exemption from publishing Public CBC report</label></div>
+          </div>
+        </div>
+
+        <div class="stack">
+          <div class="card">
+            <div class="card-head">
+              <h2 class="card-title">Group members</h2>
+              <p class="card-desc">Maps to the reporting group member name collection.</p>
+            </div>
+            <div class="card-body">
+              <div class="toggle-row"><input id="memberGroupExempt" type="checkbox" /><label for="memberGroupExempt">Exempt from publishing group members</label></div>
+              <div class="group-members" id="groupMembersList" style="margin-top:14px;"></div>
+              <div class="toolbar">
+                <button class="btn btn-secondary btn-small" id="addGroupMemberBtn">Add group member</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head">
+              <h2 class="card-title">Statement on approach to tax</h2>
+              <p class="card-desc">Provide the narrative statement, unless exempt.</p>
+            </div>
+            <div class="card-body">
+              <div class="toggle-row"><input id="taxApproachExempt" type="checkbox" /><label for="taxApproachExempt">Exempt from publishing statement on approach to tax</label></div>
+              <div class="field" style="margin-top:14px;">
+                <label for="taxApproach">Approach to tax statement</label>
+                <textarea id="taxApproach"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab-panel" id="tab-jurisdictions">
+      <div class="stack">
+        <div class="card">
+          <div class="card-head">
+            <h2 class="card-title">Jurisdiction reports</h2>
+            <p class="card-desc">Each row becomes one PCBCJurisdictionReport entry in the exported XML.</p>
+          </div>
+          <div class="card-body">
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Jurisdiction exempt</th>
+                    <th>Jurisdiction name</th>
+                    <th>Activities exempt</th>
+                    <th>Business activities</th>
+                    <th>Employees exempt</th>
+                    <th>Employees</th>
+                    <th>Unrelated rev exempt</th>
+                    <th>Unrelated revenue</th>
+                    <th>Related rev exempt</th>
+                    <th>Related revenue</th>
+                    <th>Profit exempt</th>
+                    <th>Profit</th>
+                    <th>Loss exempt</th>
+                    <th>Loss</th>
+                    <th>Tangible exempt</th>
+                    <th>Tangible assets</th>
+                    <th>Tax paid exempt</th>
+                    <th>Income tax paid</th>
+                    <th>Tax accrued exempt</th>
+                    <th>Income tax accrued</th>
+                    <th>Reason exempt</th>
+                    <th>Difference reason</th>
+                    <th>Currency exempt</th>
+                    <th>Currency</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="jurisdictionTableBody"></tbody>
+              </table>
+            </div>
+            <div class="toolbar">
+              <button class="btn btn-secondary btn-small" id="addJurisdictionBtn">Add jurisdiction</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <h2 class="card-title">Rest of the world aggregated information</h2>
+            <p class="card-desc">Optional block for aggregated data.</p>
+          </div>
+          <div class="card-body">
+            <div class="toggle-row"><input id="aggregatedEnabled" type="checkbox" /><label for="aggregatedEnabled">Include aggregated information block</label></div>
+            <div class="form-grid" style="margin-top:14px;">
+              <div class="field full"><label for="aggBusinessActivities">Business activities</label><textarea id="aggBusinessActivities"></textarea></div>
+              <div class="field"><label for="aggEmployees">Employees</label><input id="aggEmployees" type="text" /></div>
+              <div class="field"><label for="aggUnrelatedRevenue">Unrelated revenue</label><input id="aggUnrelatedRevenue" type="text" /></div>
+              <div class="field"><label for="aggRelatedRevenue">Related revenue</label><input id="aggRelatedRevenue" type="text" /></div>
+              <div class="field"><label for="aggProfit">Profit</label><input id="aggProfit" type="text" /></div>
+              <div class="field"><label for="aggLoss">Loss</label><input id="aggLoss" type="text" /></div>
+              <div class="field"><label for="aggTangibleAssets">Tangible assets</label><input id="aggTangibleAssets" type="text" /></div>
+              <div class="field"><label for="aggIncomeTaxPaid">Income tax paid</label><input id="aggIncomeTaxPaid" type="text" /></div>
+              <div class="field"><label for="aggIncomeTaxAccrued">Income tax accrued</label><input id="aggIncomeTaxAccrued" type="text" /></div>
+              <div class="field"><label for="aggCurrency">Currency</label><input id="aggCurrency" type="text" /></div>
+            </div>
+            <p class="footer-note">This single-file build is optimized for GitHub Pages. No server processing is required; everything runs in-browser.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab-panel" id="tab-xml">
+      <div class="card">
+        <div class="card-head">
+          <h2 class="card-title">XML preview</h2>
+          <p class="card-desc">Generated from the values currently entered.</p>
+        </div>
+        <div class="card-body">
+          <div class="code-box" id="xmlPreview"></div>
+          <p class="footer-note">Deployment tip: place this file at <code>/tools/pcbc/index.html</code> in your GitHub Pages repo, then link to <code>/tools/pcbc/</code> from your main site.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const NS = "http://www.sbr.gov.au/ato/pcbcrequest";
+    const declarationTextDefault = `I declare that:\nthis document has been prepared in accordance with information supplied by the entity,\nI have received a declaration in writing from the entity stating that the information is true and correct,\nI am authorised by the entity to give this document to the Commissioner of Taxation.`;
+
+    const countryOptions = [
+      ["ad", "Andorra"],["ae", "United Arab Emirates"],["af", "Afghanistan"],["ag", "Antigua and Barbuda"],["ai", "Anguilla"],["al", "Albania"],["am", "Armenia"],["ao", "Angola"],["ar", "Argentina"],["at", "Austria"],["au", "Australia"],["aw", "Aruba"],["az", "Azerbaijan"],["ba", "Bosnia and Herzegovina"],["bb", "Barbados"],["bd", "Bangladesh"],["be", "Belgium"],["bf", "Burkina Faso"],["bg", "Bulgaria"],["bh", "Bahrain"],["bi", "Burundi"],["bj", "Benin"],["bm", "Bermuda"],["bn", "Brunei"],["bo", "Bolivia"],["br", "Brazil"],["bs", "Bahamas"],["bt", "Bhutan"],["bw", "Botswana"],["by", "Belarus"],["bz", "Belize"],["ca", "Canada"],["cd", "Democratic Republic of the Congo"],["cf", "Central African Republic"],["cg", "Congo"],["ch", "Switzerland"],["ci", "Côte d’Ivoire"],["cl", "Chile"],["cm", "Cameroon"],["cn", "China"],["co", "Colombia"],["cr", "Costa Rica"],["cu", "Cuba"],["cv", "Cape Verde"],["cy", "Cyprus"],["cz", "Czech Republic"],["de", "Germany"],["dj", "Djibouti"],["dk", "Denmark"],["dm", "Dominica"],["do", "Dominican Republic"],["dz", "Algeria"],["ec", "Ecuador"],["ee", "Estonia"],["eg", "Egypt"],["er", "Eritrea"],["es", "Spain"],["et", "Ethiopia"],["fi", "Finland"],["fj", "Fiji"],["fm", "Micronesia"],["fr", "France"],["ga", "Gabon"],["gb", "United Kingdom"],["gd", "Grenada"],["ge", "Georgia"],["gh", "Ghana"],["gi", "Gibraltar"],["gl", "Greenland"],["gm", "Gambia"],["gn", "Guinea"],["gq", "Equatorial Guinea"],["gr", "Greece"],["gt", "Guatemala"],["gu", "Guam"],["gw", "Guinea-Bissau"],["gy", "Guyana"],["hk", "Hong Kong"],["hn", "Honduras"],["hr", "Croatia"],["ht", "Haiti"],["hu", "Hungary"],["id", "Indonesia"],["ie", "Ireland"],["il", "Israel"],["im", "Isle of Man"],["in", "India"],["iq", "Iraq"],["ir", "Iran"],["is", "Iceland"],["it", "Italy"],["je", "Jersey"],["jm", "Jamaica"],["jo", "Jordan"],["jp", "Japan"],["ke", "Kenya"],["kg", "Kyrgyzstan"],["kh", "Cambodia"],["ki", "Kiribati"],["km", "Comoros"],["kn", "Saint Kitts and Nevis"],["kp", "North Korea"],["kr", "South Korea"],["kw", "Kuwait"],["ky", "Cayman Islands"],["kz", "Kazakhstan"],["la", "Laos"],["lb", "Lebanon"],["lc", "Saint Lucia"],["li", "Liechtenstein"],["lk", "Sri Lanka"],["lr", "Liberia"],["ls", "Lesotho"],["lt", "Lithuania"],["lu", "Luxembourg"],["lv", "Latvia"],["ly", "Libya"],["ma", "Morocco"],["mc", "Monaco"],["md", "Moldova"],["me", "Montenegro"],["mg", "Madagascar"],["mh", "Marshall Islands"],["mk", "North Macedonia"],["ml", "Mali"],["mm", "Myanmar"],["mn", "Mongolia"],["mo", "Macao"],["mr", "Mauritania"],["ms", "Montserrat"],["mt", "Malta"],["mu", "Mauritius"],["mv", "Maldives"],["mw", "Malawi"],["mx", "Mexico"],["my", "Malaysia"],["mz", "Mozambique"],["na", "Namibia"],["nc", "New Caledonia"],["ne", "Niger"],["ng", "Nigeria"],["ni", "Nicaragua"],["nl", "Netherlands"],["no", "Norway"],["np", "Nepal"],["nz", "New Zealand"],["om", "Oman"],["pa", "Panama"],["pe", "Peru"],["pf", "French Polynesia"],["pg", "Papua New Guinea"],["ph", "Philippines"],["pk", "Pakistan"],["pl", "Poland"],["pr", "Puerto Rico"],["ps", "Palestine"],["pt", "Portugal"],["pw", "Palau"],["py", "Paraguay"],["qa", "Qatar"],["ro", "Romania"],["rs", "Serbia"],["ru", "Russia"],["rw", "Rwanda"],["sa", "Saudi Arabia"],["sb", "Solomon Islands"],["sc", "Seychelles"],["sd", "Sudan"],["se", "Sweden"],["sg", "Singapore"],["si", "Slovenia"],["sk", "Slovakia"],["sl", "Sierra Leone"],["sm", "San Marino"],["sn", "Senegal"],["so", "Somalia"],["sr", "Suriname"],["ss", "South Sudan"],["st", "São Tomé and Príncipe"],["sv", "El Salvador"],["sx", "Sint Maarten"],["sy", "Syria"],["sz", "Eswatini"],["td", "Chad"],["tg", "Togo"],["th", "Thailand"],["tj", "Tajikistan"],["tl", "Timor-Leste"],["tm", "Turkmenistan"],["tn", "Tunisia"],["to", "Tonga"],["tr", "Türkiye"],["tt", "Trinidad and Tobago"],["tv", "Tuvalu"],["tw", "Taiwan"],["tz", "Tanzania"],["ua", "Ukraine"],["ug", "Uganda"],["us", "United States"],["uy", "Uruguay"],["uz", "Uzbekistan"],["va", "Vatican City"],["vc", "Saint Vincent and the Grenadines"],["ve", "Venezuela"],["vg", "British Virgin Islands"],["vi", "U.S. Virgin Islands"],["vn", "Vietnam"],["vu", "Vanuatu"],["ws", "Samoa"],["xk", "Kosovo"],["ye", "Yemen"],["za", "South Africa"],["zm", "Zambia"],["zw", "Zimbabwe"]
+    ].sort((a,b) => a[1].localeCompare(b[1]));
+
+    const blankJurisdiction = () => ({
+      jurisdictionNameExempt: false,
+      jurisdictionName: "",
+      businessActivitiesExempt: false,
+      businessActivities: "",
+      employeesExempt: false,
+      employees: "",
+      unrelatedRevenueExempt: false,
+      unrelatedRevenue: "",
+      relatedRevenueExempt: false,
+      relatedRevenue: "",
+      profitExempt: false,
+      profit: "",
+      lossExempt: false,
+      loss: "",
+      tangibleAssetsExempt: false,
+      tangibleAssets: "",
+      incomeTaxPaidExempt: false,
+      incomeTaxPaid: "",
+      incomeTaxAccruedExempt: false,
+      incomeTaxAccrued: "",
+      differenceReasonExempt: false,
+      differenceReason: "",
+      currencyExempt: false,
+      currency: ""
+    });
+
+    const blankAggregated = () => ({
+      enabled: false,
+      businessActivities: "",
+      employees: "",
+      unrelatedRevenue: "",
+      relatedRevenue: "",
+      profit: "",
+      loss: "",
+      tangibleAssets: "",
+      incomeTaxPaid: "",
+      incomeTaxAccrued: "",
+      currency: ""
+    });
+
+    const initialState = {
+      amendment: false,
+      declarationText: declarationTextDefault,
+      statementAccepted: true,
+      signatureDate: "",
+      signatoryIdentifier: "",
+      financialYear: "",
+      startDate: "",
+      endDate: "",
+      residencyCountry: "au",
+      atoReferenceNumber: "",
+      abn: "",
+      entityName: "",
+      email: "",
+      phone: "",
+      address1: "",
+      address2: "",
+      locality: "",
+      stateOrTerritory: "",
+      postcode: "",
+      addressCountry: "au",
+      generalPublishingExemption: false,
+      memberGroupExempt: false,
+      groupMembers: [],
+      taxApproachExempt: false,
+      taxApproach: "",
+      jurisdictions: [blankJurisdiction()],
+      aggregated: blankAggregated()
+    };
+
+    let state = structuredClone(initialState);
+
+    const el = (id) => document.getElementById(id);
+
+    function populateCountrySelect(selectEl, defaultValue) {
+      selectEl.innerHTML = '<option value="">Select country</option>' + countryOptions.map(([code, name]) => `<option value="${code}">${name} (${code.toUpperCase()})</option>`).join("");
+      selectEl.value = defaultValue || "";
+    }
+
+    function xmlEscape(value) {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/\"/g, "&quot;")
+        .replace(/'/g, "&apos;");
+    }
+
+    function tag(name, value, indent = 0) {
+      if (value === undefined || value === null || value === "") return "";
+      const pad = "  ".repeat(indent);
+      return `${pad}<${name}>${xmlEscape(value)}</${name}>\n`;
+    }
+
+    function boolTag(name, value, indent = 0) {
+      return tag(name, value ? "true" : "false", indent);
+    }
+
+    function numericOrEmpty(v) {
+      return v === "" || v === null || v === undefined ? "" : String(v).trim();
+    }
+
+    function validate(current) {
+      const issues = [];
+      const req = [
+        [current.signatureDate, "Signature date"],
+        [current.signatoryIdentifier, "Signatory identifier"],
+        [current.financialYear, "Financial year"],
+        [current.startDate, "Reporting period start date"],
+        [current.endDate, "Reporting period end date"],
+        [current.residencyCountry, "Residency country"],
+        [current.entityName, "Entity name"],
+        [current.email, "Email"],
+        [current.phone, "Phone"],
+        [current.address1, "Address line 1"],
+        [current.locality, "Locality"],
+        [current.addressCountry, "Address country"]
+      ];
+      req.forEach(([v, label]) => {
+        if (!String(v ?? "").trim()) issues.push(`${label} is required.`);
+      });
+      if (!current.generalPublishingExemption && current.jurisdictions.length === 0) {
+        issues.push("At least one jurisdiction report is required unless a full exemption applies.");
+      }
+      current.jurisdictions.forEach((j, idx) => {
+        const row = idx + 1;
+        if (!j.jurisdictionNameExempt && !j.jurisdictionName.trim()) issues.push(`Jurisdiction row ${row}: name is required unless exempt.`);
+        if (!j.businessActivitiesExempt && !j.businessActivities.trim()) issues.push(`Jurisdiction row ${row}: business activities are required unless exempt.`);
+        if (!j.currencyExempt && !j.currency.trim()) issues.push(`Jurisdiction row ${row}: currency is required unless exempt.`);
+        if (!j.profitExempt && !j.lossExempt && !j.profit && !j.loss) issues.push(`Jurisdiction row ${row}: enter profit or loss, or mark the applicable field exempt.`);
+      });
+      return issues;
+    }
+
+    function buildXml(current) {
+      const x = [];
+      x.push('<?xml version="1.0" encoding="utf-8"?>');
+      x.push(`<PCBCRequest xmlns="${NS}">`);
+      x.push(`  <RP>`);
+      x.push(boolTag("AmendmentI", current.amendment, 2).trimEnd());
+      x.push(`    <RPDeclaration>`);
+      x.push(tag("InternationalDealingsPublicCountryByCountryDeclarationStatementT", current.declarationText, 3).trimEnd());
+      x.push(boolTag("StatementAcceptedI", current.statementAccepted, 3).trimEnd());
+      x.push(tag("SignatureD", current.signatureDate, 3).trimEnd());
+      x.push(tag("SignatoryIdentifierT", current.signatoryIdentifier, 3).trimEnd());
+      x.push(`    </RPDeclaration>`);
+      x.push(`    <PCBCGlobalParentReportingPeriod>`);
+      x.push(tag("FinancialY", current.financialYear, 3).trimEnd());
+      x.push(tag("StartD", current.startDate, 3).trimEnd());
+      x.push(tag("EndD", current.endDate, 3).trimEnd());
+      x.push(`    </PCBCGlobalParentReportingPeriod>`);
+      x.push(`    <PCBCGlobalParentDetails>`);
+      x.push(tag("ResidencyTaxPurposesCountryC", current.residencyCountry, 3).trimEnd());
+      if (current.atoReferenceNumber) x.push(tag("AustralianTaxationOfficeReferenceNumberId", current.atoReferenceNumber, 3).trimEnd());
+      if (current.abn) x.push(tag("AustralianBusinessNumberId", current.abn, 3).trimEnd());
+      x.push(tag("OrganisationNameDetailsOrganisationalNameT", current.entityName, 3).trimEnd());
+      x.push(tag("ElectronicContactElectronicMailAddressT", current.email, 3).trimEnd());
+      x.push(tag("ElectronicContactTelephoneMinimalN", current.phone, 3).trimEnd());
+      x.push(tag("AddressDetailsLine1T", current.address1, 3).trimEnd());
+      if (current.address2) x.push(tag("AddressDetailsLine2T", current.address2, 3).trimEnd());
+      x.push(tag("AddressDetailsLocalityNameT", current.locality, 3).trimEnd());
+      if (current.stateOrTerritory) x.push(tag("AddressDetailsStateOrTerritoryC", current.stateOrTerritory, 3).trimEnd());
+      if (current.postcode) x.push(tag("AddressDetailsPostcodeT", current.postcode, 3).trimEnd());
+      x.push(tag("AddressDetailsCountryC", current.addressCountry, 3).trimEnd());
+      x.push(boolTag("InternationalDealingsPublicCountryByCountryGeneralPublishingExemptionI", current.generalPublishingExemption, 3).trimEnd());
+
+      if (!current.generalPublishingExemption) {
+        x.push(`      <PublicCBCReport>`);
+        x.push(boolTag("InternationalDealingsPublicCountryByCountryMemberCBCReportingGroupI", current.memberGroupExempt, 4).trimEnd());
+        if (current.groupMembers.length > 0) {
+          x.push(`        <GlobalParentEntityGroupMembersOrganisationNameDetailsOrganisationalNameTCollection>`);
+          current.groupMembers.forEach((member) => {
+            if (member.trim()) x.push(tag("GlobalParentEntityGroupMembersOrganisationNameDetailsOrganisationalNameT", member.trim(), 5).trimEnd());
+          });
+          x.push(`        </GlobalParentEntityGroupMembersOrganisationNameDetailsOrganisationalNameTCollection>`);
+        }
+        x.push(`        <PCBCReportingInformation>`);
+        x.push(boolTag("InternationalDealingsPublicCountryByCountryTaxationApproachPublishingExemptionI", current.taxApproachExempt, 5).trimEnd());
+        if (!current.taxApproachExempt && current.taxApproach) x.push(tag("InternationalDealingsPublicCountryByCountryTaxationApproachT", current.taxApproach, 5).trimEnd());
+        x.push(`        </PCBCReportingInformation>`);
+        x.push(`        <PCBCJurisdictionReportCollection>`);
+        current.jurisdictions.forEach((j) => {
+          x.push(`          <PCBCJurisdictionReport>`);
+          x.push(`            <JurisdictionName>`);
+          x.push(boolTag("InternationalDealingsPublicCountryByCountryJurisdictionNamePublishingExemptionI", j.jurisdictionNameExempt, 7).trimEnd());
+          if (!j.jurisdictionNameExempt && j.jurisdictionName) x.push(tag("InternationalDealingsPublicCountryByCountryJurisdictionNameT", j.jurisdictionName, 7).trimEnd());
+          x.push(`            </JurisdictionName>`);
+          x.push(`            <BusinessActivities>`);
+          x.push(boolTag("InternationalDealingsPublicCountryByCountryMainBusinessActivitiesPublishingExemptionI", j.businessActivitiesExempt, 7).trimEnd());
+          if (!j.businessActivitiesExempt && j.businessActivities) x.push(tag("InternationalDealingsPublicCountryByCountryMainBusinessActivitiesT", j.businessActivities, 7).trimEnd());
+          x.push(`            </BusinessActivities>`);
+          x.push(`            <NumberOfEmployeesFTEEquivalent>`);
+          x.push(boolTag("InternationalDealingsPublicCountryByCountryEmployeeNumberPublishingExemptionI", j.employeesExempt, 7).trimEnd());
+          if (!j.employeesExempt && numericOrEmpty(j.employees) !== "") x.push(tag("InternationalDealingsPublicCountryByCountryEmployeeNumberCt", numericOrEmpty(j.employees), 7).trimEnd());
+          x.push(`            </NumberOfEmployeesFTEEquivalent>`);
+          x.push(`            <UnrelatedPartiesRevenue>`);
+          x.push(boolTag("InternationalDealingsPublicCountryByCountryUnrelatedPartiesRevenuePublishingExemptionI", j.unrelatedRevenueExempt, 7).trimEnd());
+          if (!j.unrelatedRevenueExempt && numericOrEmpty(j.unrelatedRevenue) !== "") x.push(tag("InternationalDealingsPublicCountryByCountryUnrelatedPartiesRevenueA", numericOrEmpty(j.unrelatedRevenue), 7).trimEnd());
+          x.push(`            </UnrelatedPartiesRevenue>`);
+          x.push(`            <RelatedPartiesRevenueNotTaxResidentOfJurisdiction>`);
+          x.push(boolTag("InternationalDealingsPublicCountryByCountryRelatedPartyRevenueNotTaxResidentJurisdictionPublishingExemptionI", j.relatedRevenueExempt, 7).trimEnd());
+          if (!j.relatedRevenueExempt && numericOrEmpty(j.relatedRevenue) !== "") x.push(tag("InternationalDealingsPublicCountryByCountryRelatedPartyRevenueNotTaxResidentJurisdictionA", numericOrEmpty(j.relatedRevenue), 7).trimEnd());
+          x.push(`            </RelatedPartiesRevenueNotTaxResidentOfJurisdiction>`);
+          x.push(`            <BeforeIncomeTaxProfitOrLoss>`);
+          x.push(`              <BeforeIncomeTaxProfit>`);
+          x.push(boolTag("InternationalDealingsPublicCountryByCountryProfitBeforeIncomeTaxPublishingExemptionI", j.profitExempt, 8).trimEnd());
+          if (!j.profitExempt && numericOrEmpty(j.profit) !== "") x.push(tag("InternationalDealingsPublicCountryByCountryProfitBeforeIncomeTaxA", numericOrEmpty(j.profit), 8).trimEnd());
+          x.push(`              </BeforeIncomeTaxProfit>`);
+          x.push(`              <BeforeIncomeTaxLoss>`);
+          x.push(boolTag("InternationalDealingsPublicCountryByCountryLossBeforeIncomeTaxPublishingExemptionI", j.lossExempt, 8).trimEnd());
+          if (!j.lossExempt && numericOrEmpty(j.loss) !== "") x.push(tag("InternationalDealingsPublicCountryByCountryLossBeforeIncomeTaxA", numericOrEmpty(j.loss), 8).trimEnd());
+          x.push(`              </BeforeIncomeTaxLoss>`);
+          x.push(`            </BeforeIncomeTaxProfitOrLoss>`);
+          x.push(`            <PostReportingPeriodBookValueOfTangibleAssets>`);
+          x.push(boolTag("InternationalDealingsPublicCountryByCountryTangibleAssetBookValuePublishingExemptionI", j.tangibleAssetsExempt, 7).trimEnd());
+          if (!j.tangibleAssetsExempt && numericOrEmpty(j.tangibleAssets) !== "") x.push(tag("InternationalDealingsPublicCountryByCountryTangibleAssetBookValueA", numericOrEmpty(j.tangibleAssets), 7).trimEnd());
+          x.push(`            </PostReportingPeriodBookValueOfTangibleAssets>`);
+          x.push(`            <IncomeTaxPaid>`);
+          x.push(boolTag("InternationalDealingsPublicCountryByCountryIncomeTaxPaidPublishingExemptionI", j.incomeTaxPaidExempt, 7).trimEnd());
+          if (!j.incomeTaxPaidExempt && numericOrEmpty(j.incomeTaxPaid) !== "") x.push(tag("InternationalDealingsPublicCountryByCountryIncomeTaxPaidA", numericOrEmpty(j.incomeTaxPaid), 7).trimEnd());
+          x.push(`            </IncomeTaxPaid>`);
+          x.push(`            <IncomeTaxAccrued>`);
+          x.push(boolTag("InternationalDealingsPublicCountryByCountryIncomeTaxAccruedPublishingExemptionI", j.incomeTaxAccruedExempt, 7).trimEnd());
+          if (!j.incomeTaxAccruedExempt && numericOrEmpty(j.incomeTaxAccrued) !== "") x.push(tag("InternationalDealingsPublicCountryByCountryIncomeTaxAccruedA", numericOrEmpty(j.incomeTaxAccrued), 7).trimEnd());
+          x.push(`            </IncomeTaxAccrued>`);
+          x.push(`            <ReasonForDifferenceBetweenIncomeTaxAccruedAndProfitOrLossBeforeIncomeTaxMultipliedByIncomeTaxRate>`);
+          x.push(boolTag("InternationalDealingsPublicCountryByCountryDifferenceBetweenIncomeTaxAccruedAndIncomeTaxDuePublishingExemptionI", j.differenceReasonExempt, 7).trimEnd());
+          if (!j.differenceReasonExempt && j.differenceReason) x.push(tag("InternationalDealingsPublicCountryByCountryDifferenceBetweenIncomeTaxAccruedAndIncomeTaxDueT", j.differenceReason, 7).trimEnd());
+          x.push(`            </ReasonForDifferenceBetweenIncomeTaxAccruedAndProfitOrLossBeforeIncomeTaxMultipliedByIncomeTaxRate>`);
+          x.push(`            <CurrencyUsedInCalculating>`);
+          x.push(boolTag("InternationalDealingsPublicCountryByCountryCurrencyUsedPublishingExemptionI", j.currencyExempt, 7).trimEnd());
+          if (!j.currencyExempt && j.currency) x.push(tag("InternationalDealingsPublicCountryByCountryCurrencySuppliedT", j.currency, 7).trimEnd());
+          x.push(`            </CurrencyUsedInCalculating>`);
+          x.push(`          </PCBCJurisdictionReport>`);
+        });
+        x.push(`        </PCBCJurisdictionReportCollection>`);
+        if (current.aggregated.enabled) {
+          const a = current.aggregated;
+          const aggregatedSimple = (wrapper, valueName, value) => {
+            x.push(`          <${wrapper}>`);
+            if (String(value ?? "").trim()) x.push(tag(valueName, value, 6).trimEnd());
+            x.push(`          </${wrapper}>`);
+          };
+          x.push(`        <PCBCRestOfTheWorldAggregatedInformationReport>`);
+          aggregatedSimple("BusinessActivitiesAggregatedInformation", "InternationalDealingsPublicCountryByCountryMainBusinessActivitiesT", a.businessActivities);
+          aggregatedSimple("NumberOfEmployeesFTEEquivalentAggregatedInformation", "InternationalDealingsPublicCountryByCountryEmployeeNumberCt", numericOrEmpty(a.employees));
+          aggregatedSimple("UnrelatedPartiesRevenueAggregatedInformation", "InternationalDealingsPublicCountryByCountryUnrelatedPartiesRevenueA", numericOrEmpty(a.unrelatedRevenue));
+          aggregatedSimple("RelatedPartiesRevenueNotTaxResidentOfJurisdictionAggregatedInformation", "InternationalDealingsPublicCountryByCountryRelatedPartyRevenueNotTaxResidentJurisdictionA", numericOrEmpty(a.relatedRevenue));
+          x.push(`          <BeforeIncomeTaxProfitLossAggregatedInformation>`);
+          if (numericOrEmpty(a.profit) !== "") x.push(tag("InternationalDealingsPublicCountryByCountryProfitBeforeIncomeTaxA", numericOrEmpty(a.profit), 6).trimEnd());
+          if (numericOrEmpty(a.loss) !== "") x.push(tag("InternationalDealingsPublicCountryByCountryLossBeforeIncomeTaxA", numericOrEmpty(a.loss), 6).trimEnd());
+          x.push(`          </BeforeIncomeTaxProfitLossAggregatedInformation>`);
+          aggregatedSimple("PostReportingPeriodBookValueOfTangibleAssetsAggregatedInformation", "InternationalDealingsPublicCountryByCountryTangibleAssetBookValueA", numericOrEmpty(a.tangibleAssets));
+          aggregatedSimple("IncomeTaxPaidAggregatedInformation", "InternationalDealingsPublicCountryByCountryIncomeTaxPaidA", numericOrEmpty(a.incomeTaxPaid));
+          aggregatedSimple("IncomeTaxAccruedAggregatedInformation", "InternationalDealingsPublicCountryByCountryIncomeTaxAccruedA", numericOrEmpty(a.incomeTaxAccrued));
+          aggregatedSimple("CurrencyUsedInCalculatingAggregatedInformation", "InternationalDealingsPublicCountryByCountryCurrencySuppliedT", a.currency);
+          x.push(`        </PCBCRestOfTheWorldAggregatedInformationReport>`);
+        }
+        x.push(`      </PublicCBCReport>`);
+      }
+
+      x.push(`    </PCBCGlobalParentDetails>`);
+      x.push(`  </RP>`);
+      x.push(`</PCBCRequest>`);
+      return x.filter(Boolean).join("\n");
+    }
+
+    function download(filename, content, mime = "application/octet-stream") {
+      const blob = new Blob([content], { type: mime });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function renderValidation() {
+      const issues = validate(state);
+      const alert = el("validationAlert");
+      const list = el("validationList");
+      if (!issues.length) {
+        alert.classList.remove("show");
+        list.innerHTML = "";
+        return;
+      }
+      alert.classList.add("show");
+      list.innerHTML = issues.slice(0, 12).map(issue => `<li>${issue}</li>`).join("") + (issues.length > 12 ? `<li>Plus ${issues.length - 12} more</li>` : "");
+    }
+
+    function bindBasicFields() {
+      [
+        "declarationText","signatureDate","signatoryIdentifier","financialYear","startDate","endDate","atoReferenceNumber","abn",
+        "entityName","email","phone","address1","address2","locality","stateOrTerritory","postcode","taxApproach","jsonFileName"
+      ].forEach((id) => {
+        el(id).addEventListener("input", () => {
+          if (id !== "jsonFileName") state[id] = el(id).value;
+          updatePreview();
+        });
+      });
+
+      [
+        "amendment","statementAccepted","generalPublishingExemption","memberGroupExempt","taxApproachExempt","aggregatedEnabled"
+      ].forEach((id) => {
+        el(id).addEventListener("change", () => {
+          if (id === "aggregatedEnabled") state.aggregated.enabled = el(id).checked;
+          else state[id] = el(id).checked;
+          updatePreview();
+        });
+      });
+
+      ["residencyCountry", "addressCountry"].forEach((id) => {
+        el(id).addEventListener("change", () => {
+          state[id] = el(id).value;
+          updatePreview();
+        });
+      });
+
+      [
+        ["aggBusinessActivities", "businessActivities"],
+        ["aggEmployees", "employees"],
+        ["aggUnrelatedRevenue", "unrelatedRevenue"],
+        ["aggRelatedRevenue", "relatedRevenue"],
+        ["aggProfit", "profit"],
+        ["aggLoss", "loss"],
+        ["aggTangibleAssets", "tangibleAssets"],
+        ["aggIncomeTaxPaid", "incomeTaxPaid"],
+        ["aggIncomeTaxAccrued", "incomeTaxAccrued"],
+        ["aggCurrency", "currency"]
+      ].forEach(([id, key]) => {
+        el(id).addEventListener("input", () => {
+          state.aggregated[key] = el(id).value;
+          updatePreview();
+        });
+      });
+    }
+
+    function renderGroupMembers() {
+      const wrap = el("groupMembersList");
+      wrap.innerHTML = "";
+      state.groupMembers.forEach((member, idx) => {
+        const row = document.createElement("div");
+        row.className = "member-row";
+        row.innerHTML = `
+          <input type="text" value="${escapeHtmlAttr(member)}" placeholder="Group member ${idx + 1}" data-member-input="${idx}" />
+          <button class="btn btn-danger btn-small" type="button" data-member-remove="${idx}">Remove</button>
+        `;
+        wrap.appendChild(row);
+      });
+
+      wrap.querySelectorAll("[data-member-input]").forEach((input) => {
+        input.addEventListener("input", (e) => {
+          const idx = Number(e.target.getAttribute("data-member-input"));
+          state.groupMembers[idx] = e.target.value;
+          updatePreview();
+        });
+      });
+
+      wrap.querySelectorAll("[data-member-remove]").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          const idx = Number(e.target.getAttribute("data-member-remove"));
+          state.groupMembers.splice(idx, 1);
+          renderGroupMembers();
+          updatePreview();
+        });
+      });
+    }
+
+    function renderJurisdictions() {
+      const tbody = el("jurisdictionTableBody");
+      tbody.innerHTML = "";
+      state.jurisdictions.forEach((j, idx) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${idx + 1}</td>
+          <td class="cell-center"><input type="checkbox" data-j="${idx}" data-k="jurisdictionNameExempt" ${j.jurisdictionNameExempt ? "checked" : ""}></td>
+          <td><input type="text" data-j="${idx}" data-k="jurisdictionName" value="${escapeHtmlAttr(j.jurisdictionName)}"></td>
+          <td class="cell-center"><input type="checkbox" data-j="${idx}" data-k="businessActivitiesExempt" ${j.businessActivitiesExempt ? "checked" : ""}></td>
+          <td><textarea data-j="${idx}" data-k="businessActivities">${escapeHtmlText(j.businessActivities)}</textarea></td>
+          <td class="cell-center"><input type="checkbox" data-j="${idx}" data-k="employeesExempt" ${j.employeesExempt ? "checked" : ""}></td>
+          <td><input type="text" data-j="${idx}" data-k="employees" value="${escapeHtmlAttr(j.employees)}"></td>
+          <td class="cell-center"><input type="checkbox" data-j="${idx}" data-k="unrelatedRevenueExempt" ${j.unrelatedRevenueExempt ? "checked" : ""}></td>
+          <td><input type="text" data-j="${idx}" data-k="unrelatedRevenue" value="${escapeHtmlAttr(j.unrelatedRevenue)}"></td>
+          <td class="cell-center"><input type="checkbox" data-j="${idx}" data-k="relatedRevenueExempt" ${j.relatedRevenueExempt ? "checked" : ""}></td>
+          <td><input type="text" data-j="${idx}" data-k="relatedRevenue" value="${escapeHtmlAttr(j.relatedRevenue)}"></td>
+          <td class="cell-center"><input type="checkbox" data-j="${idx}" data-k="profitExempt" ${j.profitExempt ? "checked" : ""}></td>
+          <td><input type="text" data-j="${idx}" data-k="profit" value="${escapeHtmlAttr(j.profit)}"></td>
+          <td class="cell-center"><input type="checkbox" data-j="${idx}" data-k="lossExempt" ${j.lossExempt ? "checked" : ""}></td>
+          <td><input type="text" data-j="${idx}" data-k="loss" value="${escapeHtmlAttr(j.loss)}"></td>
+          <td class="cell-center"><input type="checkbox" data-j="${idx}" data-k="tangibleAssetsExempt" ${j.tangibleAssetsExempt ? "checked" : ""}></td>
+          <td><input type="text" data-j="${idx}" data-k="tangibleAssets" value="${escapeHtmlAttr(j.tangibleAssets)}"></td>
+          <td class="cell-center"><input type="checkbox" data-j="${idx}" data-k="incomeTaxPaidExempt" ${j.incomeTaxPaidExempt ? "checked" : ""}></td>
+          <td><input type="text" data-j="${idx}" data-k="incomeTaxPaid" value="${escapeHtmlAttr(j.incomeTaxPaid)}"></td>
+          <td class="cell-center"><input type="checkbox" data-j="${idx}" data-k="incomeTaxAccruedExempt" ${j.incomeTaxAccruedExempt ? "checked" : ""}></td>
+          <td><input type="text" data-j="${idx}" data-k="incomeTaxAccrued" value="${escapeHtmlAttr(j.incomeTaxAccrued)}"></td>
+          <td class="cell-center"><input type="checkbox" data-j="${idx}" data-k="differenceReasonExempt" ${j.differenceReasonExempt ? "checked" : ""}></td>
+          <td><textarea data-j="${idx}" data-k="differenceReason">${escapeHtmlText(j.differenceReason)}</textarea></td>
+          <td class="cell-center"><input type="checkbox" data-j="${idx}" data-k="currencyExempt" ${j.currencyExempt ? "checked" : ""}></td>
+          <td><input type="text" data-j="${idx}" data-k="currency" value="${escapeHtmlAttr(j.currency)}" placeholder="AUD"></td>
+          <td class="row-actions"><button type="button" class="btn btn-danger btn-small" data-remove-j="${idx}">Remove</button></td>
+        `;
+        tbody.appendChild(row);
+      });
+
+      tbody.querySelectorAll("input[data-j], textarea[data-j]").forEach((field) => {
+        const type = field.type;
+        const eventName = type === "checkbox" ? "change" : "input";
+        field.addEventListener(eventName, (e) => {
+          const idx = Number(e.target.getAttribute("data-j"));
+          const key = e.target.getAttribute("data-k");
+          state.jurisdictions[idx][key] = type === "checkbox" ? e.target.checked : e.target.value;
+          updatePreview();
+        });
+      });
+
+      tbody.querySelectorAll("[data-remove-j]").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          const idx = Number(e.target.getAttribute("data-remove-j"));
+          state.jurisdictions.splice(idx, 1);
+          renderJurisdictions();
+          updatePreview();
+        });
+      });
+    }
+
+    function escapeHtmlAttr(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/"/g, "&quot;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }
+
+    function escapeHtmlText(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }
+
+    function syncFormFromState() {
+      el("declarationText").value = state.declarationText;
+      el("signatureDate").value = state.signatureDate;
+      el("signatoryIdentifier").value = state.signatoryIdentifier;
+      el("financialYear").value = state.financialYear;
+      el("startDate").value = state.startDate;
+      el("endDate").value = state.endDate;
+      el("amendment").checked = state.amendment;
+      el("statementAccepted").checked = state.statementAccepted;
+      el("residencyCountry").value = state.residencyCountry || "";
+      el("addressCountry").value = state.addressCountry || "";
+      el("atoReferenceNumber").value = state.atoReferenceNumber;
+      el("abn").value = state.abn;
+      el("entityName").value = state.entityName;
+      el("email").value = state.email;
+      el("phone").value = state.phone;
+      el("address1").value = state.address1;
+      el("address2").value = state.address2;
+      el("locality").value = state.locality;
+      el("stateOrTerritory").value = state.stateOrTerritory;
+      el("postcode").value = state.postcode;
+      el("generalPublishingExemption").checked = state.generalPublishingExemption;
+      el("memberGroupExempt").checked = state.memberGroupExempt;
+      el("taxApproachExempt").checked = state.taxApproachExempt;
+      el("taxApproach").value = state.taxApproach;
+      el("aggregatedEnabled").checked = state.aggregated.enabled;
+      el("aggBusinessActivities").value = state.aggregated.businessActivities || "";
+      el("aggEmployees").value = state.aggregated.employees || "";
+      el("aggUnrelatedRevenue").value = state.aggregated.unrelatedRevenue || "";
+      el("aggRelatedRevenue").value = state.aggregated.relatedRevenue || "";
+      el("aggProfit").value = state.aggregated.profit || "";
+      el("aggLoss").value = state.aggregated.loss || "";
+      el("aggTangibleAssets").value = state.aggregated.tangibleAssets || "";
+      el("aggIncomeTaxPaid").value = state.aggregated.incomeTaxPaid || "";
+      el("aggIncomeTaxAccrued").value = state.aggregated.incomeTaxAccrued || "";
+      el("aggCurrency").value = state.aggregated.currency || "";
+      renderGroupMembers();
+      renderJurisdictions();
+      updatePreview();
+    }
+
+    function updatePreview() {
+      renderValidation();
+      el("xmlPreview").textContent = buildXml(state);
+    }
+
+    function setupTabs() {
+      document.querySelectorAll(".tab-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".tab-btn").forEach((b) => b.classList.remove("active"));
+          document.querySelectorAll(".tab-panel").forEach((p) => p.classList.remove("active"));
+          btn.classList.add("active");
+          el(`tab-${btn.dataset.tab}`).classList.add("active");
+        });
+      });
+    }
+
+    function setupButtons() {
+      el("addGroupMemberBtn").addEventListener("click", () => {
+        state.groupMembers.push("");
+        renderGroupMembers();
+        updatePreview();
+      });
+
+      el("addJurisdictionBtn").addEventListener("click", () => {
+        state.jurisdictions.push(blankJurisdiction());
+        renderJurisdictions();
+        updatePreview();
+      });
+
+      el("saveJsonBtn").addEventListener("click", () => {
+        const filename = (el("jsonFileName").value || "pcbcrequest-workpaper.json").trim();
+        download(filename, JSON.stringify(state, null, 2), "application/json;charset=utf-8");
+      });
+
+      el("exportXmlBtn").addEventListener("click", () => {
+        const filename = `PCBCRequest-${state.financialYear || "draft"}.xml`;
+        download(filename, buildXml(state), "application/xml;charset=utf-8");
+      });
+
+      el("loadJsonInput").addEventListener("change", async (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        try {
+          const text = await file.text();
+          const parsed = JSON.parse(text);
+          state = {
+            ...structuredClone(initialState),
+            ...parsed,
+            aggregated: { ...blankAggregated(), ...(parsed.aggregated || {}) },
+            jurisdictions: Array.isArray(parsed.jurisdictions) && parsed.jurisdictions.length ? parsed.jurisdictions.map(j => ({ ...blankJurisdiction(), ...j })) : [blankJurisdiction()],
+            groupMembers: Array.isArray(parsed.groupMembers) ? parsed.groupMembers : []
+          };
+          syncFormFromState();
+        } catch (err) {
+          alert("The uploaded file is not valid JSON.");
+        } finally {
+          e.target.value = "";
+        }
+      });
+    }
+
+    function init() {
+      populateCountrySelect(el("residencyCountry"), state.residencyCountry);
+      populateCountrySelect(el("addressCountry"), state.addressCountry);
+      setupTabs();
+      bindBasicFields();
+      setupButtons();
+      syncFormFromState();
+    }
+
+    init();
+  </script>
+</body>
+</html>
