@@ -102,26 +102,6 @@
       font-size: 52px;
       transform: rotate(-10deg);
       filter: drop-shadow(0 6px 4px rgba(0,0,0,0.15));
-      transition: top 0.06s linear, left 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
-    }
-
-    .banana.splat-hidden {
-      opacity: 0;
-    }
-
-    .splat {
-      position: absolute;
-      right: 65px;
-      bottom: 40px;
-      font-size: 44px;
-      transform: scale(0);
-      opacity: 0;
-      transition: transform 0.25s ease, opacity 0.25s ease;
-    }
-
-    .splat.show {
-      transform: scale(1);
-      opacity: 1;
     }
 
     .ground {
@@ -139,20 +119,6 @@
       bottom: 58px;
       transition: transform 0.35s ease;
       transform-origin: bottom center;
-    }
-
-    .monkey-wrap.walking .arm.left { animation: swing-left 0.26s infinite ease-in-out alternate; }
-    .monkey-wrap.walking .arm.right { animation: swing-right 0.26s infinite ease-in-out alternate; }
-    .monkey-wrap.walking .leg.left { animation: step-left 0.24s infinite ease-in-out alternate; }
-    .monkey-wrap.walking .leg.right { animation: step-right 0.24s infinite ease-in-out alternate; }
-
-    .monkey-wrap.idle .arm.left, .monkey-wrap.idle .arm.right,
-    .monkey-wrap.idle .leg.left, .monkey-wrap.idle .leg.right {
-      animation: none;
-    }
-
-    .monkey-wrap.eating {
-      animation: chew 0.18s 6 ease-in-out;
     }
 
     .monkey {
@@ -180,7 +146,148 @@
       left: 51px;
       top: 70px;
     }
-@@ -291,58 +325,109 @@
+
+    .head {
+      position: absolute;
+      width: 88px;
+      height: 82px;
+      background: #9b6037;
+      border-radius: 50%;
+      left: 31px;
+      top: 0;
+    }
+
+    .face {
+      position: absolute;
+      width: 62px;
+      height: 48px;
+      background: #f0c59b;
+      border-radius: 50%;
+      left: 44px;
+      top: 24px;
+    }
+
+    .ear {
+      position: absolute;
+      width: 28px;
+      height: 28px;
+      background: #9b6037;
+      border-radius: 50%;
+      top: 20px;
+    }
+
+    .ear.left { left: 18px; }
+    .ear.right { right: 18px; }
+
+    .eye {
+      position: absolute;
+      width: 7px;
+      height: 7px;
+      background: #1d1d1d;
+      border-radius: 50%;
+      top: 43px;
+    }
+
+    .eye.left { left: 58px; }
+    .eye.right { left: 84px; }
+
+    .smile {
+      position: absolute;
+      width: 20px;
+      height: 10px;
+      border-bottom: 3px solid #6b3d1f;
+      border-radius: 0 0 20px 20px;
+      top: 56px;
+      left: 65px;
+    }
+
+    .arm {
+      position: absolute;
+      width: 16px;
+      height: 64px;
+      background: #9b6037;
+      border-radius: 12px;
+      top: 62px;
+    }
+
+    .arm.left {
+      left: 22px;
+      transform: rotate(25deg);
+      transform-origin: top center;
+    }
+
+    .arm.right {
+      right: 22px;
+      transform: rotate(-25deg);
+      transform-origin: top center;
+    }
+
+    .leg {
+      position: absolute;
+      width: 16px;
+      height: 58px;
+      background: #9b6037;
+      border-radius: 12px;
+      top: 118px;
+    }
+
+    .leg.left { left: 48px; transform: rotate(8deg); }
+    .leg.right { left: 85px; transform: rotate(-8deg); }
+
+    .tail {
+      position: absolute;
+      width: 70px;
+      height: 70px;
+      border: 12px solid #9b6037;
+      border-left-color: transparent;
+      border-top-color: transparent;
+      border-radius: 50%;
+      left: -18px;
+      top: 70px;
+      transform: rotate(10deg);
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1.3fr 0.7fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .question-box, .message-box {
+      background: #fff8df;
+      border: 3px solid #f1cf63;
+      border-radius: 22px;
+      padding: 18px;
+    }
+
+    .question {
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 800;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .answer-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    input[type="number"] {
+      font-size: 24px;
+      padding: 12px 14px;
+      width: 180px;
+      border-radius: 14px;
+      border: 3px solid #d8b85c;
+      text-align: center;
+    }
+
+    button {
+      font-size: 20px;
+      font-weight: 700;
+      border: none;
       border-radius: 14px;
       padding: 12px 18px;
       cursor: pointer;
@@ -206,63 +313,12 @@
       font-size: 15px;
     }
 
-    .timer-row {
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      justify-content: center;
-      font-weight: 700;
-      color: #6d4a15;
-    }
-
-    .timer-track {
-      width: min(100%, 320px);
-      height: 14px;
-      background: #ffe8a9;
-      border-radius: 999px;
-      overflow: hidden;
-      border: 2px solid #d8b85c;
-    }
-
-    .timer-fill {
-      height: 100%;
-      width: 100%;
-      background: linear-gradient(90deg, #63bf4f 0%, #ffd447 60%, #ff8b4f 100%);
-      transition: width 0.1s linear;
-    }
-
     .win {
       color: #1d7a2f;
     }
 
     .lose {
       color: #9d1e1e;
-    }
-
-    @keyframes swing-left {
-      from { transform: rotate(18deg); }
-      to { transform: rotate(42deg); }
-    }
-
-    @keyframes swing-right {
-      from { transform: rotate(-18deg); }
-      to { transform: rotate(-42deg); }
-    }
-
-    @keyframes step-left {
-      from { transform: rotate(-6deg); }
-      to { transform: rotate(18deg); }
-    }
-
-    @keyframes step-right {
-      from { transform: rotate(6deg); }
-      to { transform: rotate(-18deg); }
-    }
-
-    @keyframes chew {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-4px); }
     }
 
     @media (max-width: 760px) {
@@ -290,7 +346,15 @@
     }
   </style>
 </head>
-@@ -358,178 +443,276 @@
+<body>
+  <div class="game">
+    <h1 class="title">🐵 Monkey Banana Math Game 🍌</h1>
+    <p class="subtitle">Answer the math questions to help the monkey reach the banana!</p>
+
+    <div class="top-bar">
+      <div class="stat">Net Success: <span id="netSuccess">0</span> / 10</div>
+      <div class="stat">Net Incorrect: <span id="netIncorrect">0</span> / 5</div>
+      <div class="stat">Correct: <span id="correctCount">0</span></div>
       <div class="stat">Wrong: <span id="wrongCount">0</span></div>
     </div>
 
@@ -316,21 +380,16 @@
 
       <div class="tree">
         <div class="leaves"></div>
-        <div class="banana" id="banana">🍌</div>
+        <div class="banana">🍌</div>
         <div class="trunk"></div>
       </div>
 
-      <div class="splat" id="splat">💥</div>
       <div class="ground"></div>
     </div>
 
     <div class="controls">
       <div class="question-box">
         <div class="question" id="questionText">2 + 3 = ?</div>
-        <div class="timer-row">
-          <span>⏱️ <span id="timerLabel">10.0</span>s</span>
-          <div class="timer-track"><div class="timer-fill" id="timerFill"></div></div>
-        </div>
         <div class="answer-row">
           <input id="answerInput" type="number" inputmode="numeric" placeholder="Your answer" />
           <button class="primary" id="submitBtn">Check</button>
@@ -359,36 +418,42 @@
     const correctCountEl = document.getElementById('correctCount');
     const wrongCountEl = document.getElementById('wrongCount');
     const monkeyWrap = document.getElementById('monkeyWrap');
-    const bananaEl = document.getElementById('banana');
-    const splatEl = document.getElementById('splat');
-    const timerLabel = document.getElementById('timerLabel');
-    const timerFill = document.getElementById('timerFill');
 
     let currentAnswer = 0;
     let correctCount = 0;
     let wrongCount = 0;
     let netScore = 0;
     let gameOver = false;
-    let roundResolved = false;
-    let questionStartAt = 0;
-    let timerId = null;
-    const roundMs = 10000;
-    const bananaStartTop = 75;
-    const bananaGroundTop = 225;
 
     function randomInt(min, max) {
       return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function generateQuestion() {
+      const useAddition = Math.random() < 0.6;
+      let a, b, symbol;
+
+      if (useAddition) {
+        a = randomInt(0, 10);
+        b = randomInt(0, 10);
+        currentAnswer = a + b;
+        symbol = '+';
+      } else {
+        a = randomInt(0, 10);
+        b = randomInt(0, a);
+        currentAnswer = a - b;
+        symbol = '-';
+      }
+
+      questionText.textContent = `${a} ${symbol} ${b} = ?`;
+      answerInput.value = '';
+      answerInput.focus();
     }
 
     function updateMonkey() {
       const scale = Math.max(0.55, 1 + netScore * 0.06);
       const moveX = Math.max(0, netScore * 18);
       monkeyWrap.style.transform = `translateX(${moveX}px) scale(${scale})`;
-    }
-
-    function setMonkeyState(state) {
-      monkeyWrap.classList.remove('idle', 'walking', 'eating');
-      monkeyWrap.classList.add(state);
     }
 
     function updateStats() {
@@ -410,7 +475,6 @@
         gameOver = true;
         setMessage('🎉 You win! The monkey got the banana! 🍌', 'win');
         questionText.textContent = 'You did it!';
-        stopTimer();
         return true;
       }
 
@@ -418,94 +482,14 @@
         gameOver = true;
         setMessage('🙈 Oh no! The monkey got too tiny. Try again!', 'lose');
         questionText.textContent = 'Game Over';
-        stopTimer();
         return true;
       }
 
       return false;
     }
 
-    function resetBananaVisual() {
-      bananaEl.style.top = `${bananaStartTop}px`;
-      bananaEl.style.left = '20px';
-      bananaEl.classList.remove('splat-hidden');
-      bananaEl.style.transform = 'rotate(-10deg)';
-      splatEl.classList.remove('show');
-    }
-
-    function stopTimer() {
-      if (timerId) {
-        clearInterval(timerId);
-        timerId = null;
-      }
-    }
-
-    function startRoundTimer() {
-      stopTimer();
-      questionStartAt = performance.now();
-      timerLabel.textContent = '10.0';
-      timerFill.style.width = '100%';
-      bananaEl.style.top = `${bananaStartTop}px`;
-
-      timerId = setInterval(() => {
-        const elapsed = performance.now() - questionStartAt;
-        const remaining = Math.max(0, roundMs - elapsed);
-        const ratio = remaining / roundMs;
-        const bananaTop = bananaStartTop + ((1 - ratio) * (bananaGroundTop - bananaStartTop));
-
-        timerLabel.textContent = (remaining / 1000).toFixed(1);
-        timerFill.style.width = `${ratio * 100}%`;
-        bananaEl.style.top = `${bananaTop}px`;
-
-        if (remaining <= 0) {
-          resolveRound(false, true);
-        }
-      }, 50);
-    }
-
-    function resolveRound(isCorrect, timedOut = false) {
-      if (gameOver || roundResolved) return;
-      roundResolved = true;
-      stopTimer();
-
-      if (isCorrect) {
-        correctCount += 1;
-        netScore += 1;
-        setMonkeyState('walking');
-        bananaEl.style.left = '-130px';
-        bananaEl.style.top = '168px';
-        bananaEl.style.transform = 'rotate(20deg)';
-        setTimeout(() => {
-          bananaEl.classList.add('splat-hidden');
-          setMonkeyState('eating');
-          setMessage('✅ Great job! Monkey caught and ate the banana, then got stronger!', 'win');
-          updateStats();
-          if (!checkWinLose()) {
-            setTimeout(() => generateQuestion(), 550);
-          }
-        }, 360);
-      } else {
-        wrongCount += 1;
-        netScore -= 1;
-        bananaEl.style.top = `${bananaGroundTop}px`;
-        bananaEl.style.transform = 'rotate(8deg)';
-        bananaEl.classList.add('splat-hidden');
-        splatEl.classList.add('show');
-        setMonkeyState('idle');
-        if (timedOut) {
-          setMessage(`⏰ Time's up! The banana splatted. Answer was ${currentAnswer}.`, 'lose');
-        } else {
-          setMessage(`❌ Oops! The banana splatted. The right answer was ${currentAnswer}.`, 'lose');
-        }
-        updateStats();
-        if (!checkWinLose()) {
-          setTimeout(() => generateQuestion(), 700);
-        }
-      }
-    }
-
     function submitAnswer() {
-      if (gameOver || roundResolved) return;
+      if (gameOver) return;
 
       const userAnswer = Number(answerInput.value);
       if (answerInput.value.trim() === '') {
@@ -513,20 +497,27 @@
         return;
       }
 
-      resolveRound(userAnswer === currentAnswer, false);
+      if (userAnswer === currentAnswer) {
+        correctCount += 1;
+        netScore += 1;
+        setMessage('✅ Correct! The monkey grew bigger!');
+      } else {
+        wrongCount += 1;
+        netScore -= 1;
+        setMessage(`❌ Not quite. The right answer was ${currentAnswer}.`);
+      }
+
+      updateStats();
+      if (!checkWinLose()) {
+        generateQuestion();
+      }
     }
 
     function restartGame() {
-      stopTimer();
       correctCount = 0;
       wrongCount = 0;
       netScore = 0;
       gameOver = false;
-      roundResolved = false;
-      setMonkeyState('idle');
-      resetBananaVisual();
-      timerLabel.textContent = '10.0';
-      timerFill.style.width = '100%';
       setMessage("Let's help the monkey!");
       updateStats();
       generateQuestion();
@@ -537,31 +528,6 @@
     answerInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') submitAnswer();
     });
-
-    function generateQuestion() {
-      const useAddition = Math.random() < 0.6;
-      let a, b, symbol;
-
-      if (useAddition) {
-        a = randomInt(0, 10);
-        b = randomInt(0, 10);
-        currentAnswer = a + b;
-        symbol = '+';
-      } else {
-        a = randomInt(0, 10);
-        b = randomInt(0, a);
-        currentAnswer = a - b;
-        symbol = '-';
-      }
-
-      roundResolved = false;
-      questionText.textContent = `${a} ${symbol} ${b} = ?`;
-      answerInput.value = '';
-      answerInput.focus();
-      resetBananaVisual();
-      setMonkeyState('idle');
-      startRoundTimer();
-    }
 
     restartGame();
   </script>
